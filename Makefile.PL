@@ -6,6 +6,8 @@ WriteMakefile(
 	EXE_FILES    => [ qw( bin/ans2png ) ],
 	PREREQ_PM    => {
 		'Test::More'      => 0,
-		'Class::Accessor' => 0
+		'Class::Accessor' => 0,
+		'File::SAUCE'     => 0,
+		'GD'              => 0
 	},
 );

@@ -43,7 +43,7 @@ use File::SAUCE;
 
 use constant WIDTH => 80;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 METHODS
 

@@ -29,7 +29,7 @@ use constant S_END      => 3;
 use constant WIDTH      => 80;
 use constant TABSTOP    => 8;
 
-our $VERSION  = '0.02';
+our $VERSION  = '0.03';
 my @accessors = qw( save_x save_y attr state );
 
 __PACKAGE__->mk_accessors( @accessors );
@@ -66,6 +66,9 @@ sub clear {
 
 	$self->$_( 0 ) for qw( x y save_x save_y attr );
 	$self->ansi( Image::ANSI->new );
+
+	# default to white on black;
+	$self->set_attributes( 37 );
 }
 
 =head2 parse( %options )
