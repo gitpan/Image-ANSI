@@ -19,6 +19,15 @@ Image::ANSI - Load, create, manipulate and save ANSI files
 	my $pixel = $img->getpixel( $x, $y );
 	$img->putpixel( $x, $y, $pixel );
 
+	# create a thumbnail
+	my $png = $img->as_png( mode => 'thumbnail' );
+
+	# export it as a png
+	my $png = $img->as_png( mode => 'full' );
+
+	# use a custom font
+	my $png = $img->as_png( mode => 'full', font => 'Image::ANSI::Font::8x8' );
+
 =head1 DESCRIPTION
 
 This module allows you to load, create and manipulate files made up of
@@ -31,31 +40,10 @@ use warnings;
 
 use Carp;
 use File::SAUCE;
-use Image::ANSI::Font;
-use Image::ANSI::Palette;
 
 use constant WIDTH => 80;
 
-our $VERSION = '0.01';
-
-my $font = [
-	0,  50, 83, 49, 16, 33, 32, 0,  136, 0,  119, 18,  32, 18,  35, 33,
-	99, 16, 16, 33, 48, 66, 4,  17, 16,  0,  16,  16,  33, 16,  18, 48,
-	0,  16, 16, 34, 50, 17, 34, 0,  0,   0,  16,  0,   0,  16,  0,  1,
-	67, 16, 19, 17, 32, 65, 66, 32, 66,  48, 0,   0,   0,  17,  0,  32,
-	51, 51, 50, 50, 50, 50, 50, 50, 83,  0,  2,   50,  34, 83,  83, 50,
-	50, 67, 50, 34, 16, 66, 65, 66, 34,  32, 35,  16,  32, 0,   16, 1,
-	0,  18, 50, 34, 18, 34, 34, 36, 50,  0,  1,   50,  0,  35,  17, 34,
-	19, 35, 18, 17, 16, 34, 17, 35, 17,  36, 18,  0,   0,  0,   16, 18,
-	50, 66, 34, 18, 34, 18, 18, 16, 50,  50, 50,  16,  16, 16,  51, 51,
-	50, 18, 67, 34, 50, 34, 66, 50, 67,  50, 66,  32,  50, 16,  99, 17,
-	18, 0,  34, 50, 49, 99, 16, 16, 18,  18, 16,  66,  66, 0,   16, 17,
-	17, 68, 85, 0,  16, 32, 33, 17, 32,  49, 17,  33,  48, 32,  32, 16,
-	0,  16, 16, 0,  16, 16, 0,  17, 16,  1,  48,  33,  17, 32,  49, 32,
-	32, 32, 17, 16, 0,  0,  1,  33, 32,  16, 0,   136, 24, 119, 0,  112,
-	35, 37, 83, 33, 34, 35, 18, 16, 17,  50, 50,  17,  33, 34,  17, 51,
-	33, 1,  0,  0,  0,  3,  0,  17, 16,  0,  0,   17,  48, 48,  33, 0
-];    
+our $VERSION = '0.02';
 
 =head1 METHODS
 
@@ -97,7 +85,7 @@ sub new {
 	return $self;
 }
 
-=head2 clear(  )
+=head2 clear( )
 
 Clears any in-memory data.
 
@@ -131,7 +119,6 @@ sub read {
 Sets the pixel at $x, $y with $pixel (which should be an Image::ANSI::Pixel).
 
 =cut
-
 
 sub putpixel {
 	my $self = shift;
@@ -272,7 +259,6 @@ sub as_png {
 
 	require GD;
 
-	$options{ size } = '80x25' unless defined $options{ size } and  $options{ size } eq '80x50';
 	$options{ mode } = 'thumbnail' unless defined $options{ mode } and $options{ mode } eq 'full';
 
 	if( $options{ mode } eq 'full' ) {
@@ -285,7 +271,7 @@ sub as_png {
 
 =head2 as_png_thumbnail( [%options] )
 
-Creates a thumbnail version of the XBin.
+Creates a thumbnail version of the ANSI.
 
 =cut
 
@@ -293,24 +279,38 @@ sub as_png_thumbnail {
 	my $self   = shift;
 	my %options;
 	%options   = @_ if @_ % 2 == 0;
-	my $height = ( defined $options{ size } and $options{ size } ) eq '80x50' ? 1 : 2;
-	my $crop   = ( defined $options{ crop } and $options{ crop } > 0 and $options{ crop } < $self->height ) ? $options{ crop } : $self->height;
-	my $image  = GD::Image->new( 80, $crop * $height, 1 );
 	$options{ zoom } = 1 unless defined $options{ zoom };
 
+	my $font_class = $options{ font } || 'Image::ANSI::Font::8x16';
+	eval "require $font_class;";
+	croak $@ if $@;
+	my $font = $font_class->new;
+
+	my $height = int( $font->height / 8 + 0.5 );
+	$height    = 1 unless $height;
+	my $crop   = ( defined $options{ crop } and $options{ crop } > 0 and $options{ crop } < $self->height ) ? $options{ crop } : $self->height;
+	my $image  = GD::Image->new( 80, $crop * $height, 1 );
+
 	my @colors;
-	my $palette = Image::ANSI::Palette->new;
+
+	my $pal_class = $options{ palette } || 'Image::ANSI::Palette::VGA';
+	eval "require $pal_class;";
+	croak $@ if $@;
+
+	my $palette   = $pal_class->new;
 	for my $x ( 0..7 ){
 		for my $y ( 0..15 ) {
 			for my $z ( 0..8 ) {
 				$colors[ $y * 8 + $x ]->[ 8 - $z ] = $image->colorAllocate(
-					$z / 8  * ( $palette->get( $x )->[ 0 ] / 63 * 255 ) + ( 8 - $z ) / 8 * ( $palette->get( $y )->[ 0 ] / 63 * 255 ),
-					$z / 8  * ( $palette->get( $x )->[ 1 ] / 63 * 255 ) + ( 8 - $z ) / 8 * ( $palette->get( $y )->[ 1 ] / 63 * 255 ),
-					$z / 8  * ( $palette->get( $x )->[ 2 ] / 63 * 255 ) + ( 8 - $z ) / 8 * ( $palette->get( $y )->[ 2 ] / 63 * 255 ),
+					$z / 8  * ( $palette->get( $x )->[ 0 ] ) + ( 8 - $z ) / 8 * ( $palette->get( $y )->[ 0 ] ),
+					$z / 8  * ( $palette->get( $x )->[ 1 ] ) + ( 8 - $z ) / 8 * ( $palette->get( $y )->[ 1 ] ),
+					$z / 8  * ( $palette->get( $x )->[ 2 ] ) + ( 8 - $z ) / 8 * ( $palette->get( $y )->[ 2 ] ),
 				);
 			}
 		}
 	}
+
+	my $intensity = $font->intensity_map;
 
 	for my $y ( 0..$crop - 1 ) {
 		for my $x ( 0..$self->width - 1 ) { 
@@ -324,9 +324,9 @@ sub as_png_thumbnail {
 			next if $offset > $#colors;
 
 			unless( $height == 1 ) {
-				$image->setPixel( $x, $y * $height + 1, $colors[ $offset ]->[ $font->[ ord( $pixel->char ) ] & 15 ] );
+				$image->setPixel( $x, $y * $height + 1, $colors[ $offset ]->[ $intensity->[ ord( $pixel->char ) ] & 15 ] );
 			}
-			$image->setPixel( $x, $y * $height, $colors[ $offset ]->[ $font->[ ord( $pixel->char ) ] >> 4 ] );
+			$image->setPixel( $x, $y * $height, $colors[ $offset ]->[ $intensity->[ ord( $pixel->char ) ] >> 4 ] );
 		}
 	}
 
@@ -345,7 +345,7 @@ sub as_png_thumbnail {
 
 =head2 as_png_full( [%options] )
 
-Creates a full-size replica of the image. You can pass a "crop" option to
+Creates a full-size replica of the ANSI. You can pass a "crop" option to
 crop the image at certain height.
 
 	# Crop it after 25 (text-mode) rows
@@ -357,21 +357,31 @@ sub as_png_full {
 	my $self   = shift;
 	my %options;
 	%options   = @_ if @_ % 2 == 0;
-	my $height = ( defined $options{ size } and $options{ size } eq '80x50' ) ?  8 : 16;
 	my $crop   = ( defined $options{ crop } and $options{ crop } > 0 and $options{ crop } < $self->height ) ? $options{ crop } : $self->height;
-	my $image  = GD::Image->new( 640, $crop * $height );
+
+	my $font_class = $options{ font } || 'Image::ANSI::Font::8x16';
+	eval "require $font_class;";
+	croak $@ if $@;
+
+	my $font       = $font_class->new->as_gd;
+	my $height     = $font->height;
+	my $width      = $font->width;
+
+	my $image  = GD::Image->new( 80 * $width, $crop * $height );
 
 	my @colors;
-	my $palette = Image::ANSI::Palette->new;
+	my $pal_class = $options{ palette } || 'Image::ANSI::Palette::VGA';
+	eval "require $pal_class;";
+	croak $@ if $@;
+
+	my $palette   = $pal_class->new;
         for( 0..15 ) {
 		push @colors, $image->colorAllocate(
-			$_->[ 0 ] / 63 * 255,
-			$_->[ 1 ] / 63 * 255,
-			$_->[ 2 ] / 63 * 255
+			$_->[ 0 ],
+			$_->[ 1 ],
+			$_->[ 2 ]
 		) for $palette->get( $_ );
         }
-
-	my $font = Image::ANSI::Font->new( size => $options{ size } || '80x25' )->as_gd;
 
         for my $y (0..$crop - 1 ) {
 		for my $x (0..$self->width - 1 ) {
@@ -380,10 +390,10 @@ sub as_png_full {
 			next unless $pixel;
 
 			if( $pixel->bg ) {
-				$image->filledRectangle( $x * 8, $y * $height, ( $x + 1 ) * 8, ( $y + 1 ) * $height - 1, $colors[ $pixel->bg ] );
+				$image->filledRectangle( $x * $width, $y * $height, ( $x + 1 ) * $width, ( $y + 1 ) * $height - 1, $colors[ $pixel->bg ] );
 			}
 
-			$image->string( $font, $x * 8, $y * $height, $pixel->char, $colors[ $pixel->fg ] );
+			$image->string( $font, $x * $width, $y * $height, $pixel->char, $colors[ $pixel->fg ] );
             }
         }
 
@@ -401,7 +411,7 @@ sub as_png_full {
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Brian Cassidy
+Copyright 2005 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

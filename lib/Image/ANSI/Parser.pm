@@ -29,7 +29,7 @@ use constant S_END      => 3;
 use constant WIDTH      => 80;
 use constant TABSTOP    => 8;
 
-our $VERSION  = '0.01';
+our $VERSION  = '0.02';
 my @accessors = qw( save_x save_y attr state );
 
 __PACKAGE__->mk_accessors( @accessors );
@@ -387,7 +387,7 @@ sub clear_line {
 	}
 }
 
-=head2 clear_line( )
+=head2 clear_screen( )
 
 clears all pixels.
 
@@ -538,7 +538,7 @@ sub _create_io_object {
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Brian Cassidy
+Copyright 2005 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

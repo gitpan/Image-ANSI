@@ -1,5 +1,20 @@
 Revision history for Perl extension Image::ANSI
 
+0.02  Wed Mar 16 2005
+	- various pod fixes
+	- added pod_coverage test
+	- extracted the fonts (8x8 and 8x16) into their
+	  own modules - Font.pm is now a base class
+	- extracted the palette into its own module -
+	  Palette.pm is now a base class
+	- palette colors are now expressed in 256 color
+	  RGB terms
+	- the as_png methods can now accept font and
+	  palette parameters for customized output (thanks
+	  to Ian Langworth)
+	- moved font intensity to Font.pm
+	- added ans2png program
+
 0.01  Tue Dec 14 20:32:10 2004
 	- original version
 

@@ -1,6 +1,7 @@
-Image::ANSI - 
+Image::ANSI - Load, create, manipulate and save ANSI files
 
-Description goes here...
+This module allows you to load, create and manipulate files made up of
+ANSI escape codes, aka ANSI art.
 
 
 INSTALLATION
@@ -20,7 +21,7 @@ Brian Cassidy <bricas@cpan.org>
 
 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Brian Cassidy
+Copyright 2005 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

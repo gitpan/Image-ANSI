@@ -2,57 +2,39 @@ package Image::ANSI::Palette;
 
 =head1 NAME
 
-Image::ANSI::Palette - The default palette
+Image::ANSI::Palette - A base class palettes
 
 =head1 SYNOPSIS
 
-	$pal = Image::ANSI::Palette->new;
+	# use Image::ANSI::Palette::VGA or your own
+	$pal = Image::ANSI::Palette:VGA->new;
 
 =cut
 
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
-
-my $palette = [
-
-	[ 0,   0,   0   ], # black
-	[ 42,  0,   0   ], # red
-	[ 0,   42,  0   ], # green
-	[ 42,  21,  0   ], # yellow
-	[ 0,   0,   42  ], # blue
-	[ 42,  0,   42  ], # magenta
-	[ 0,   42,  42  ], # cya
-	[ 42,  42,  42  ], # white
-	                   # bright
-	[ 21,  21,  21  ], # black
-	[ 63,  21,  21  ], # red
-	[ 21,  63,  21  ], # green
-	[ 63,  63,  21  ], # yellow
-	[ 21,  21,  63  ], # blue
-	[ 63,  21,  63  ], # magenta
-	[ 21,  63,  63  ], # cyan
-	[ 63,  63,  63  ]  # white
-
-];
+our $VERSION = '0.02';
 
 =head1 METHODS
 
-=head2 new( )
+=head2 new( [$palette] )
 
 Creates a new Image::ANSI::Palette object.
 
 =cut
 
 sub new {
-	my $class = shift;
-	my $self  = {};
+	my $class   = shift;
+	my $palette = shift;
+	my $self    = {};
 
 	bless $self, $class;
 
-	for( 0..@$palette ) {
-		$self->set( $_, $palette->[ $_ ] );
+	if( $palette ) {
+		for( 0..@$palette ) {
+			$self->set( $_, $palette->[ $_ ] );
+		}
 	}
 
 	return $self;
@@ -106,7 +88,7 @@ sub clear {
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Brian Cassidy
+Copyright 2005 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

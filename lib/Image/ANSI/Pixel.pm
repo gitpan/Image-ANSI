@@ -27,12 +27,15 @@ Image::ANSI::Pixel - Pixel object
 
 use base qw( Class::Accessor );
 
+use strict;
+use warnings;
+
 # Attribute byte constants
 use constant ATTR_BLINK => 128;
 use constant ATTR_BG    => 112;
 use constant ATTR_FG    => 15;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->mk_accessors( qw( char fg bg blink ) );
 
@@ -107,7 +110,7 @@ Set the character to be displayed
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Brian Cassidy
+Copyright 2005 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
