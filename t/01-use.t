@@ -1,4 +1,4 @@
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use strict;
 use warnings;
@@ -12,5 +12,7 @@ BEGIN {
 	use_ok( 'Image::ANSI::Font::8x8' );
 	use_ok( 'Image::ANSI::Palette' );
 	use_ok( 'Image::ANSI::Palette::VGA' );
+	use_ok( 'Image::ANSIMation' );
+	use_ok( 'Image::ANSIMation::Parser' );
 }
 

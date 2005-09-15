@@ -1,6 +1,8 @@
 bin/ans2png
+Build.PL
 Changes
 lib/Image/ANSI.pm
+lib/Image/ANSIMation.pm
 lib/Image/ANSI/Font.pm
 lib/Image/ANSI/Font/8x16.pm
 lib/Image/ANSI/Font/8x8.pm
@@ -8,10 +10,11 @@ lib/Image/ANSI/Palette.pm
 lib/Image/ANSI/Palette/VGA.pm
 lib/Image/ANSI/Parser.pm
 lib/Image/ANSI/Pixel.pm
-Makefile.PL
+lib/Image/ANSIMation/Parser.pm
 MANIFEST
-README
+META.yml
 t/01-use.t
 t/98-pod_coverage.t
 t/99-pod.t
-META.yml                                 Module meta-data (added by MakeMaker)
+Makefile.PL
+README
