@@ -177,7 +177,7 @@ sub as_gif {
 		$animation->colorAllocate( $first->rgb( $_ ) );
 	}
 	
-	my $gif = $animation->gifanimbegin( 1, 1 );
+	my $gif = $animation->gifanimbegin( 1 );
 
 	for( @$frames ) {
 		my $frame = GD::Image->new( $animation->getBounds );

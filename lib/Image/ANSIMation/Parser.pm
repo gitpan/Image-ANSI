@@ -62,7 +62,7 @@ sub parse {
 
 =head2 store_frame( )
 
-Stores the value of C<$self->ansi> as the next frame and resets
+Stores the value of C<$self-<gt>ansi> as the next frame and resets
 the current ansi.
 
 =cut

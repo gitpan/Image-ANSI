@@ -28,6 +28,21 @@ DESCRIPTION
     This module allows you to load, create and manipulate files made up of
     ANSI escape codes, aka ANSI art.
 
+INSTALLATION
+    To install this module via Module::Build:
+
+            perl Build.PL
+            ./Build         # or `perl Build`
+            ./Build test    # or `perl Build test`
+            ./Build install # or `perl Build install`
+
+    To install this module via ExtUtils::MakeMaker:
+
+            perl Makefile.PL
+            make
+            make test
+            make install
+
 METHODS
   new( %options )
     Creates a new ANSI image. Currently only reads in data.
@@ -68,6 +83,9 @@ METHODS
 
   max_x( [$y] )
     find the largest x on line $y (default 0 ).
+
+  clear_line( $y )
+    clears lines $y.
 
   as_ascii( )
     strip the attributes and return only the characters.

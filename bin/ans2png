@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!C:\Perl\bin\perl.exe 
 
 =head1 NAME 
 
@@ -6,13 +6,15 @@ ans2png - Convert ansi files to png
 
 =head1 SYNOPSIS
 
-    % ans2png [-t] file.ans > file.png
+    % ans2png [-t] [-f font.fnt] [file.ans] > file.png
 
 =head1 DESCRIPTION
 
 This is a simple command-line tool to help you convert
 ansi files to png images. Use the -t switch to create a
-thumbnail.
+thumbnail. Use the -f switch to specify a GD font to use.
+Omitting the filename (or using '-') will force it to
+convert from STDIN.
 
 =cut
 
@@ -26,22 +28,26 @@ use Pod::Usage;
 our $VERSION = '0.01';
 
 my %options;
-getopts( 't', \%options );
+getopts( 'tf:', \%options );
 
 my $file = shift;
 
-pod2usage( { verbose => 1 } ) if !defined( $file );
-
-my $ansi = Image::ANSI->new( file => $file );
+my $ansi;
+if( !$file or $file eq '-' ) {
+	$ansi = Image::ANSI->new( handle => \*STDIN );
+}
+else {
+	$ansi = Image::ANSI->new( file => $file );
+}
 
 binmode STDOUT;
 
-if( $options{ t } ) {
-	print $ansi->as_png( mode => 'thumbnail' );
-}
-else {
-	print $ansi->as_png( mode => 'full' );
-}
+my %png = (
+	mode => $options{ t } ? 'thumbnail' : 'full',
+	font => $options{ f }
+);
+
+print $ansi->as_png( %png );
 
 =head1 AUTHOR
 
