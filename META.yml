@@ -1,6 +1,6 @@
 ---
 name: Image-ANSI
-version: 0.07
+version: 0.08
 author:
   - Brian Cassidy <bricas@cpan.org>
 abstract: 'Load, create, manipulate and save ANSI files'
@@ -12,7 +12,7 @@ requires:
 provides:
   Image::ANSI:
     file: lib/Image/ANSI.pm
-    version: 0.07
+    version: 0.08
   Image::ANSI::Font:
     file: lib/Image/ANSI/Font.pm
     version: 0.03
