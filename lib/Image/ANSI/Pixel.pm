@@ -35,7 +35,7 @@ use constant ATTR_BLINK => 128;
 use constant ATTR_BG    => 112;
 use constant ATTR_FG    => 15;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 __PACKAGE__->mk_accessors( qw( char fg bg blink ) );
 
@@ -96,7 +96,7 @@ Set the background color
 
 Set the blink property
 
-=head2 character( [$char] )
+=head2 char( [$char] )
 
 Set the character to be displayed
 

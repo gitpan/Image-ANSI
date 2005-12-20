@@ -33,7 +33,7 @@ use warnings;
 
 use GD;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->mk_accessors( qw( frames current_frame ) );
 
@@ -56,7 +56,10 @@ Creates a new ANSIMation. Currently only reads in data.
 
 sub new {
 	my $class = shift;
-	my $self  = $class->SUPER::new( @_ );
+
+	my $self  = {};
+	bless $self, $class;
+
 	$self->frames( [ ] );
 	$self->current_frame( 0 );
 

@@ -19,7 +19,7 @@ use warnings;
 use GD;
 use File::Temp;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 __PACKAGE__->mk_accessors( qw( width height characters ) );
 
@@ -37,6 +37,8 @@ sub new {
 	my $self    = {};
 
 	bless $self, $class;
+
+	$self->clear;
 
 	$self->chars( $chars ) if $chars;
 
@@ -101,6 +103,9 @@ sub char {
 		my $chars = $index + 1;
 		$self->characters( $chars ) if $chars > $self->characters;
 		$self->{ _CHARS }->[ $index ] = $char;
+
+		my $height = scalar @$char;
+		$self->height( $height ) if $height > $self->height;
 	}
 	
 	return $self->{ _CHARS }->[ $index ];

@@ -1,9 +1,9 @@
---- #YAML:1.0
+---
 name: Image-ANSI
-version: 0.05
+version: 0.07
 author:
   - Brian Cassidy <bricas@cpan.org>
-abstract: Load, create, manipulate and save ANSI files
+abstract: 'Load, create, manipulate and save ANSI files'
 license: perl
 requires:
   Class::Accessor: 0
@@ -12,10 +12,10 @@ requires:
 provides:
   Image::ANSI:
     file: lib/Image/ANSI.pm
-    version: 0.05
+    version: 0.07
   Image::ANSI::Font:
     file: lib/Image/ANSI/Font.pm
-    version: 0.02
+    version: 0.03
   Image::ANSI::Font::8x16:
     file: lib/Image/ANSI/Font/8x16.pm
     version: 0.01
@@ -24,20 +24,20 @@ provides:
     version: 0.01
   Image::ANSI::Palette:
     file: lib/Image/ANSI/Palette.pm
-    version: 0.02
+    version: 0.03
   Image::ANSI::Palette::VGA:
     file: lib/Image/ANSI/Palette/VGA.pm
     version: 0.01
   Image::ANSI::Parser:
     file: lib/Image/ANSI/Parser.pm
-    version: 0.04
+    version: 0.05
   Image::ANSI::Pixel:
     file: lib/Image/ANSI/Pixel.pm
-    version: 0.02
+    version: 0.03
   Image::ANSIMation:
     file: lib/Image/ANSIMation.pm
-    version: 0.01
+    version: 0.02
   Image::ANSIMation::Parser:
     file: lib/Image/ANSIMation/Parser.pm
-    version: 0.01
+    version: 0.02
 generated_by: Module::Build version 0.2611
