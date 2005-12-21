@@ -62,6 +62,12 @@ METHODS
   read( %options )
     Reads in an ANSI.
 
+  write( %options )
+    Writes the ANSI data to a file, filehandle or string.
+
+  as_string( %options )
+    Returns the ANSI output as a scalar.
+
   putpixel( $x, $y, $pixel )
     Sets the pixel at $x, $y with $pixel (which should be an
     Image::ANSI::Pixel).
