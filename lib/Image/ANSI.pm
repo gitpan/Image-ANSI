@@ -2,7 +2,11 @@ package Image::ANSI;
 
 =head1 NAME
 
-Image::ANSI - Load, create, manipulate and save ANSI files
+Image::ANSI - (DEPRECATED) Load, create, manipulate and save ANSI files
+
+=head1 DEPRECATION NOTICE
+
+    This module has been replaced by Image:TextMode.
 
 =head1 SYNOPSIS
 
@@ -27,6 +31,9 @@ Image::ANSI - Load, create, manipulate and save ANSI files
 
 	# use a custom font
 	my $png = $img->as_png( mode => 'full', font => 'Image::ANSI::Font::8x8' );
+	
+	# write the ANSI to a file
+	$img->write( file => 'out.ans' );
 
 =head1 DESCRIPTION
 
@@ -58,7 +65,7 @@ use Carp;
 use File::SAUCE;
 use Image::ANSI::Utils;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 =head1 METHODS
 
@@ -139,7 +146,7 @@ Writes the ANSI data to a file, filehandle or string.
 sub write {
 	my $self    = shift;
 	my %options = @_;
-	my $file    = $self->create_io_object( \%options, '<' );
+	my $file    = $self->create_io_object( \%options, '>' );
 	
 	$file->print( $self->as_string( @_ ) );
 }
@@ -548,7 +555,7 @@ sub _get_intensity_map {
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2005 by Brian Cassidy
+Copyright 2004-2009 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
